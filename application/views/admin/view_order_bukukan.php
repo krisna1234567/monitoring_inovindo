@@ -1,0 +1,222 @@
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion pb-0" id="accordionSidebar">
+
+  <!-- Sidebar - Brand -->
+  <a class="sidebar-brand d-flex align-items-center justify-content-center"
+    href="<?= base_url('index.php/keuangan'); ?>">
+    <div class="sidebar-brand-icon rotate-n-15">
+      <i class="fas fa-laugh-wink"></i>
+    </div>
+    <div class="sidebar-brand-text mx-3">Admin</div>
+  </a>
+  <!-- Divider -->
+
+  <hr class="sidebar-divider">
+ 
+  <li class="nav-item">
+    <a class="nav-link pb-0" href="<?= base_url('index.php/admin/list_order'); ?>">
+      <i class="fas fa-fw fa-file-invoice"></i>
+      <span>Order</span></a>
+  </li>
+  <!-- Heading -->
+  <hr class="sidebar-divider">
+
+  <li class="nav-item">
+    <a class="nav-link pb-0" href="<?=base_url('index.php/admin/list_perusahaan'); ?>">
+      <i class="fas fa-fw fa-users"></i>
+      <span>List Pelanggan</span></a>
+  </li>
+  <hr class="sidebar-divider">
+  <!-- <div class="sidebar-heading">
+    Rekening
+  </div> -->
+  <li class="nav-item">
+    <a class="nav-link pb-0" href="<?=base_url('index.php/admin/list_atm'); ?>">
+      <i class="fas fa-fw fa-file-invoice"></i>
+      <span>Rekening</span></a>
+  </li>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider">
+  <li class="nav-item">
+    <a class="nav-link pb-0" href="<?= base_url('index.php/auth/logout'); ?>">
+      <i class="fas fa-fw fa-sign-out-alt"></i>
+      <span>Logout</span></a>
+  </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+    <!-- Main Content -->
+    <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                <i class="fa fa-bars"></i>
+            </button>
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- Nav Item - Alerts -->
+              
+
+                        <!-- Nav Item - User Information -->
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <span
+                            class="mr-2 d-none d-lg-inline text-gray-600 small"><?= ucfirst($user['nama_user']); ?></span>
+                        <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+                    </a>
+                    <!-- Dropdown - User Information -->
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                        aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="<?= base_url('index.php/keuangan/profile'); ?>">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Profile
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="<?= base_url('index.php/auth/logout'); ?>" data-toggle="modal"
+                            data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </a>
+                    </div>
+                </li>
+
+            </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+        <table class="table ml-4">
+            <center><h3 style="margin-left:30px;">Detail Pesanan</h3></center>
+            <?= $this->session->flashdata('finish'); ?>
+            <?= $this->session->flashdata('kirim'); ?>
+            <?= $this->session->flashdata('gagal2'); ?>
+            <?= $this->session->flashdata('gagal3'); ?>
+            <thead>
+                <tr>
+                <th  scope="col">No Surat</th>
+                    <th  scope="col">Tanggal</th>
+                    <th  scope="col">Konsumen</th>
+                    <th  scope="col">Alamat</th>
+                    <th  scope="col">No. Telpon</th>
+                    <th  scope="col">Status</th>
+                    <th scope="col">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($orders as $inv) { ?>
+                    <tr>
+                        <td> <?= $inv['no_invoice']; ?></td>
+                        <td> <?= longdate_indo($inv['tgl_invoice']); ?></td>
+                        <td> <?= $inv['jns_order1']; ?></td>
+                        <td> <?= $inv['alamat']; ?></td>
+                        <td> <?= $inv['tlp']; ?></td>
+                        <td><?php if($inv['status_invoice'] == 0 ){
+                                       echo 'Pesanan Masuk';
+                                    }elseif($inv['status_invoice'] == 1 ){
+                                        echo 'Proses Kirim Invoice & Sub Invoice';
+                                    }elseif($inv['status_invoice'] == 2 ){
+                                        echo 'Invoice & Sub Invoice Selesai dibukukan';
+                                    }
+                                    elseif($inv['status_invoice'] == 3 ){
+                                        echo 'Proses Pengerjaan';
+                                    }elseif($inv['status_invoice'] == 4 ){
+                                        echo 'Finish Pengerjaan';
+                                    }
+                                    elseif($inv['status_invoice'] == 5 ){
+                                        echo 'Selesai';
+                                    }else{
+                                        echo '-';
+                                    }
+                                    ?>
+                        </td>
+                        <td>
+                        <?php if($inv['status_invoice'] == 0 ){
+                            ?>
+                            <a href="<?= base_url()."index.php/admin/input_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-warning">Input Produk Pesanan</a>
+                            <a href="<?= base_url()."index.php/admin/edit_invoice_sub/".$inv['id_invoice'];?>"
+                            class="badge badge-primary">Edit Produk Pesanan</a>
+                            <!-- <a href="<?= base_url()."index.php/admin/cetak_bukti/".$inv['id_invoice'];?>"
+                            class="badge badge-success">Print Bukti Serah Terima</a> -->
+                            <a href="<?= base_url()."index.php/admin/kirim_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-danger">Kirim</a>  
+
+                         <?php }elseif($inv['status_invoice'] == 1 ){
+                             ?>
+                               <a href="<?= base_url()."index.php/admin/input_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-warning">Input Produk Pesanan</a>
+                            <a href="<?= base_url()."index.php/admin/edit_invoice_sub/".$inv['id_invoice'];?>"
+                            class="badge badge-primary">Edit Produk Pesanan</a>
+                            <!-- <a href="<?= base_url()."index.php/admin/report_invoice_sub/".$inv['id_invoice'];?>"
+                            class="badge badge-info">Report Invoice dan Sub Invoice</a>    -->
+                             
+                        <?php }elseif($inv['status_invoice'] == 2 ){
+                             ?>
+                            <a href="<?= base_url()."index.php/admin/lihat_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-warning">Lihat Invoice & Sub Invoice</a>
+                            <a href="<?= base_url()."index.php/admin/cetak_bukti/".$inv['id_invoice'];?>"
+                            class="badge badge-success">Lihat Bukti Serah Terima</a>
+                            <a href="<?= base_url()."index.php/admin/print_bukti_pembayaran/".$inv['id_invoice'];?>"
+                            class="badge badge-primary">Lihat Laporan Pembayaran</a>
+                             
+                        <?php }elseif($inv['status_invoice'] == 3 ){
+                             ?>
+                            <a href="<?= base_url()."index.php/admin/lihat_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-warning">Lihat Invoice & Sub Invoice</a>
+                            <a class="badge badge-danger"
+                            href="<?= base_url()."index.php/admin/dibukukan_semua/".$inv['id_invoice'];?>"
+                                    role="button">Dibukukan Keseluruhan</a>
+                             
+                        <?php }elseif($inv['status_invoice'] == 4 ){
+                             ?>
+                           <a href="<?= base_url()."index.php/admin/cetak_bukti/".$inv['id_invoice'];?>"
+                            class="badge badge-success">Lihat Bukti Serah Terima</a>  
+                            <a href="<?= base_url()."index.php/admin/lihat_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-warning">Lihat Invoice & Sub Invoice</a>
+                            <a class="badge badge-danger"
+                            href="<?= base_url()."index.php/admin/dibukukan_semua/".$inv['id_invoice'];?>"
+                                    role="button">Bukukan Keseluruhan</a>
+                            
+                             
+                        <?php }elseif($inv['status_invoice'] == 5 ){
+                             ?>
+                            <a href="<?= base_url()."index.php/admin/lihat_invoice/".$inv['id_invoice'];?>"
+                            class="badge badge-warning">Lihat Invoice & Sub Invoice</a>
+                            <a href="<?= base_url()."index.php/admin/print_bukti_pembayaran/".$inv['id_invoice'];?>"
+                            class="badge badge-primary">Lihat Laporan Pembayaran</a>
+                            
+                             
+                        <?php }else{
+                             echo '-';   
+                          
+                       } ?>                            
+                        </td>
+                      
+                <?php } ?>
+                    </tr>
+            </tbody>
+        </table>
+
+
+
+        
+        
+    </div>
